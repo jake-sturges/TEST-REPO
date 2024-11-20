@@ -1,0 +1,56 @@
+---
+title: "Lesson 8 RCode"
+output: html_notebook
+---
+
+```{r}
+library(Stat2Data)
+data("ButterfliesBc")
+bflies<-ButterfliesBc[,c(1,2,3)]
+
+#Make Scatterplot matrix
+plot(bflies,pch=16)
+
+# Scatterplot with six with two different colors
+#Define the two colors for Female and Male
+bcolors<-c("magenta4","dodgerblue4")
+plot(Wing~Temp, data=bflies, col = bcolors[bflies$Sex], pch = 16)
+#add a legend
+legend("topright",legend=c("Female","Male"),col=c("magenta4","dodgerblue4"),lty=1)
+
+
+#Before you fit the model make sure Sex is a factor variable using class() function
+class(bflies$Sex)
+#If it was given in numerical codes, make sure to convert the variable into a factor variable using as.factor() function.
+bfliesFit<-lm(Wing~Temp+Sex,data=bflies)
+summary(bfliesFit)
+
+#Obtain confidence intervals for regression coefficients
+confint(bfliesFit)
+
+#Separate the datasets into two: Famale and male butterflies
+Gbflies<-bflies[bflies$Sex=="Female",]
+Bbflies<-bflies[bflies$Sex=="Male",]
+
+GbfliesFit<-lm(Wing~Temp,data=Gbflies) #Females 
+summary(GbfliesFit)
+
+BbfliesFit<-lm(Wing~Temp,data=Bbflies) #Males
+summary(BbfliesFit)
+```
+
+```{r}
+#Read the data into R
+kids<-read.csv("kids.csv")
+head(kids)
+
+#Plot the data
+kidcolors<-c("dodgerblue4","magenta4")
+plot(Weight~Age, data=kids, col = kidcolors[as.factor(kids$Sex)],pch = 16)
+#add a legend
+legend("topleft",legend=c("Boys","Girls"),col=c("dodgerblue4","magenta4"),lty=1)
+
+#Interaction Term 
+kidsIntFit<-lm(Weight~Age+Sex+Age:Sex,data=kids)
+summary(kidsIntFit)
+```
